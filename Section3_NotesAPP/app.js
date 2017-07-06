@@ -1,7 +1,29 @@
 
 console.log('Starting app.js');
 
-const fs = require('fs'); // fetch all contents of the fs module and store it in the constant called 'fs'
-const _ = require('lodash'); // fetch the 3rd party module to use in this file (must have it installed in package first)
+const fs = require('fs');
+const _ = require('lodash');
+const yargs = require('yargs');
 
 const notes = require('./notes.js');
+
+const argv = yargs.argv;
+var command = argv._[0];
+console.log("Command: ", command);
+// console.log('Process:', process.argv);
+console.log('Yargs: ', argv);
+
+
+
+if (command === 'add') {
+  console.log('Adding new note');
+  notes.addNote(argv.title, argv.body);
+} else if (command === 'list') {
+  notes.getAll();
+} else if (command === 'read') {
+  notes.getNote(argv.title);
+} else if (command === 'remove') {
+  notes.removeNote(argv.title);
+}else {
+  console.log('Command not recognized');
+}
