@@ -32,8 +32,3 @@ geocode.geocodeAddress(argv.address, (geoErrorMessage, geoResults) => {
         });
     }
 });
-
-// make getWeather() similar to geocode
-// pass in arguments to get forecast
-// use callback functions instead of using console.log() in the weather.js file
-// callback(lat, lng, errorMessage, results) errorMessage is a string , results contain weather we want to print to the screen
