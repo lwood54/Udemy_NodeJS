@@ -1,10 +1,39 @@
-const request = require('request');
+const yargs = require('yargs');
 
-request({
-    url: 'https://maps.googleapis.com/maps/api/geocode/json?address=1301%20lombard%20street%20philadelphia',
-    json: true
-}, (error, response, body) => {
-    // print both lat and lon
-    console.log(`Address: ${body.results[0].formatted_address}`);
-    console.log(`Latitude: ${body.results[0].geometry.location.lat} \nLongitude: ${body.results[0].geometry.location.lng}`);
+const geocode = require('./geocode/geocode'); // leaving .js off is ok because this file is a .js file (app.js)
+const weather = require('./weather/weather.js'); // left on .js just to show it works both ways
+
+const argv = yargs
+    .options({
+        a: {
+            demand: true,
+            alias: 'address',
+            describe: 'Address to fetch weather for',
+            string: true
+        }
+    })
+    .help()
+    .alias('help', 'h')
+    .argv;
+
+geocode.geocodeAddress(argv.address, (geoErrorMessage, geoResults) => {
+    if (geoErrorMessage) {
+        console.log(errorMessage);
+    } else {
+        console.log(geoResults.address);
+        weather.getWeather(geoResults.latitude, geoResults.longitude, (weatherErrorMessage, weatherResults) => {
+            if (weatherErrorMessage) {
+                console.log(weatherErrorMessage);
+            } else {
+                console.log(`Currently, it is ${weatherResults.currentTemp} ºF.`);
+                console.log(`It feels like: ${weatherResults.feelsLike} ºF.`);
+                console.log(`Upcoming weather: ${weatherResults.skyForDay}`);
+            }
+        });
+    }
 });
+
+// make getWeather() similar to geocode
+// pass in arguments to get forecast
+// use callback functions instead of using console.log() in the weather.js file
+// callback(lat, lng, errorMessage, results) errorMessage is a string , results contain weather we want to print to the screen
