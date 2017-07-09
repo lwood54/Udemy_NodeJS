@@ -1,4 +1,0 @@
-Will this get sent to github?
-
-If all goes well, this file will get sent to github, but the other buried file of the same name
-will not get sent.
