@@ -2,6 +2,10 @@ const express = require('express');
 const hbs = require('hbs');
 const fs = require('fs');
 
+// we set up the env PORT that Heroku will set automatically, we have
+// also made it to where we set the port to 3000 if Heroku has not set
+// this variable. (as in, we are running it locally)
+const port = process.env.PORT || 3000;
 var app = express();
 
 hbs.registerPartials(__dirname + '/views/partials');
@@ -55,6 +59,6 @@ app.get('/bad', (req, res) => {
     });
 });
 
-app.listen(3000, () => {
-    console.log('Server is up on port 3000');
+app.listen(port, () => {
+    console.log(`Server is up on port ${port}`);
 });
