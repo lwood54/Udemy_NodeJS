@@ -8,8 +8,6 @@ hbs.registerPartials(__dirname + '/views/partials');
 app.set('view engine', 'hbs');
 
 app.use((req, res, next) => {
-    // to see a full list of of options for processing request data: http://expressjs.com/en/4x/api.html
-    // then you can navigate and find other things as well, like: express(), Application, Request, Response, Router
     var now = new Date().toString();
     var log = `${now}: ${req.method} ${req.url}`;
 
@@ -19,16 +17,13 @@ app.use((req, res, next) => {
             console.log('Unable to append to server.log');
         }
     });
-    next();// must provide next, so that Express knows to move on to the next call
+    next();
 });
 
-// because we haven't supplied the function next(), the page will stop at this request
-// and render the maintenance.hbs file
-app.use((req, res, next) => {
-    res.render('maintenance.hbs');
-});
-// NOTE: location definitely matters, if the page that is being called is before this command
-// then the page won't know to stop.
+// Uncomment to render maintenance page
+// app.use((req, res, next) => {
+//     res.render('maintenance.hbs');
+// });
 
 app.use(express.static(__dirname + '/public'));
 
