@@ -1,13 +1,37 @@
 const express = require('express');
 const hbs = require('hbs');
+const fs = require('fs');
 
 var app = express();
 
 hbs.registerPartials(__dirname + '/views/partials');
 app.set('view engine', 'hbs');
+
+app.use((req, res, next) => {
+    // to see a full list of of options for processing request data: http://expressjs.com/en/4x/api.html
+    // then you can navigate and find other things as well, like: express(), Application, Request, Response, Router
+    var now = new Date().toString();
+    var log = `${now}: ${req.method} ${req.url}`;
+
+    console.log(log);
+    fs.appendFile('server.log', log + '\n', (err) => {
+        if (err) {
+            console.log('Unable to append to server.log');
+        }
+    });
+    next();// must provide next, so that Express knows to move on to the next call
+});
+
+// because we haven't supplied the function next(), the page will stop at this request
+// and render the maintenance.hbs file
+app.use((req, res, next) => {
+    res.render('maintenance.hbs');
+});
+// NOTE: location definitely matters, if the page that is being called is before this command
+// then the page won't know to stop.
+
 app.use(express.static(__dirname + '/public'));
 
-// hbs.registerHelper() takes 2 arguments, the name of the argument, and the function to run
 hbs.registerHelper('getCurrentYear', () => {
     return new Date().getFullYear();
 });
